@@ -1,6 +1,6 @@
-# any python packages you want to have preinstalled
+# any python packages to be installed
 #pip install pingouin
-#pip install lxml
+pip install lxml
 
 # your git config information
 git config --global user.email christian@interpres.dk

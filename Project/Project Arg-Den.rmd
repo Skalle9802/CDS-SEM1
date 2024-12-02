@@ -1,0 +1,3 @@
+install.packages('dplyr') # for functions
+install.packages('ggplot2') # for plotting
+install.packages('dslabs') # for data

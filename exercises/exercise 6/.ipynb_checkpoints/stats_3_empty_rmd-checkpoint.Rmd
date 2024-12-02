@@ -1,0 +1,128 @@
+---
+title: An R Markdown document converted from "stats_3_empty_ipynb.ipynb"
+output: html_document
+---
+
+# Exercise 1 - introducing correlations 
+
+Let's look at the relationship between FERTILITY and LIFE EXPECTANCY. For this we'll use the gapminder dataset
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+Let's restrict our question a bit, and start by looking just at the year 2000
+```{r}
+
+```
+
+Let's start by just looking at the correlation. The best way to start is to visualise the relationship
+```{r}
+
+```
+
+```{r}
+
+```
+
+Let's look at another question. What about the relationship between population and life expectancy?
+
+Let's start by just looking at the correlation. The best way to start is to visualise the relationship
+```{r}
+
+```
+
+This plot is hard to read due to the two very high data points, let's censor them
+```{r}
+
+```
+
+```{r}
+
+```
+
+Let's apply linear models to both of these relationships
+```{r}
+
+```
+
+```{r}
+
+```
+
+# Exercise 2 - interpreting linear models  
+
+Let's go back to last week. We had a question about the influence of number of cylinders on fuel economy. Let's load the data and return to that question
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+Let's isolate the relevant data again for Audi and VW midsizes
+```{r}
+
+```
+
+```{r}
+
+```
+
+Let's use linear models to investigate the effect of number of cylinders on fuel economy in both makes
+```{r}
+
+```
+
+```{r}
+
+```
+
+Let's look at this INTERACTION between variables WITHIN THE MODEL
+```{r}
+
+```
+
+Let's go back to this question about which model is better. We can do this using model comparison. Let's build a model without make, and one with, and see what we learn
+```{r}
+
+```
+
+# Exercise 3 - non-linear predictors
+
+Lets look at the relationship infant mortality and life expectancy in the year 2000 what do you notice?
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
+

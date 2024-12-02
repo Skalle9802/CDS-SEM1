@@ -1,0 +1,268 @@
+---
+title: 
+output: html_document
+---
+
+# Exercise 1 - introducing t-test 
+
+You have already learned about the the command line, scripts, and functions. R has one more level of organisation. Packages. Packages are sets of functions. We have already used one of these. Packages can also include data. We are now going to install a package, load it, and use it just for it's data. 
+
+The package level is what makes R so powerful as a an open source language. you can make a package, get it reviewed, and have it stored on CRAN (Comprehensive R Archive Network) where everyone can download it. This means that R is an active environment for the development of statistical methods and theory.
+
+Description of the package here: https://simplystatistics.org/2018/01/22/the-dslabs-package-provides-datasets-for-teaching-data-science/
+
+```{r}
+install.packages('dplyr') # for functions
+install.packages('ggplot2') # for plotting
+install.packages('dslabs') # for data
+```
+
+```{r}
+library(dslabs)
+library(dplyr)
+library(ggplot2)
+```
+
+Let's conduct an analysis of the height data - self-reported heights in inches
+
+```{r}
+data("heights")
+```
+
+This gives us a data frame.
+
+```{r}
+str(heights)
+```
+
+```{r}
+# QUESTIONS 
+# - tell me about the data frame
+# - from the lecture, what is the first thing we should do?
+```
+
+First let's make frequency distributions for the women and men seperately.
+
+You can make some quick and dirty separate plots using a basic function and indexing...
+
+```{r}
+hist(heights$height[heights$sex=="Male"])
+hist(heights$height[heights$sex=="Female"])
+```
+
+... though it would be better if we could see all the data together on the same histogram
+
+```{r}
+ggplot(data = heights,
+       aes(x = height, 
+           fill = sex)) +
+  geom_histogram(position = 'identity', 
+                 alpha = 0.5)
+```
+
+```{r}
+# what happens if we don't use position = 'identity'? let's test it!
+```
+
+```{r}
+ggplot(data = heights,
+       aes(x = height, 
+           fill = sex)) +
+  geom_histogram(alpha = 0.5)
+```
+
+```{r}
+# sometimes your groups are of different size. make sure to pay attention to 
+# the y axis too, not just the x axis!
+```
+
+```{r}
+# here 'identity' ensures that it is the count rather than the proportion being plotted
+# 'alpha' makes the bars partly transparent
+```
+
+```{r}
+# QUESTIONS
+# what can we say about the data from these frequency distributions?
+# From the lecture, what is the next step?
+```
+
+Let's look at the summary statistics - you can actually make them in 1 table!
+
+```{r}
+stats_table <- heights %>% 
+  group_by(sex) %>% 
+  summarise(mean_height = mean(height),
+            median_height = median(height),
+            sd_height = sd(height))
+```
+
+```{r}
+stats_table
+```
+
+```{r}
+# QUESTIONS 
+# What can we say about the male and female distributions from the summary statistics?
+# can we formally test whether our distributions are normal?
+```
+
+```{r}
+shapiro.test(heights$height[heights$sex=="Male"])
+shapiro.test(heights$height[heights$sex=="Female"])
+```
+
+```{r}
+# You are looking for W-values close to 1 and p-values below 0.05.
+# BUT the Shapiro Wilks test is EXTREMELY sensitive to the tails of the distribution. 
+# (it is also too insensitive in small samples)
+# It is safe to assume these distributions are normal. There is no unambiguous way to deal with this issue.
+```
+
+Lets try visualising the data in terms of probability distributions
+
+```{r}
+ggplot(heights, 
+       aes(x = height, 
+           fill = sex)) +
+  geom_density(alpha = 0.5)
+```
+
+```{r}
+# talk about these plots, what they mean, area under the curve, etc.
+```
+
+Now we are ready to run a hypothesis test. Are men taller than women? What sort of t test should we do?
+
+```{r}
+t.test(height~sex,data=heights)
+```
+
+```{r}
+# DISCUSSION
+# What do the numbers mean? How do we read the table?
+# what do you notice about the degrees of freedom?
+# The formula is different from the lecture. Here we use Welch's t-test, which does not use the 
+# square root of the pooled variance, but rather of the variance from each group, divided by the 
+# n for that group
+```
+
+# Exercise 2 - Some more messy real world data
+
+We have been dealing with data that is fairly well organised. Let's look at some data that is slightly more messy
+
+Install and load the fuelconomy package, which has fuel economy data from the EPA: https://cran.r-project.org/web/packages/fueleconomy/fueleconomy.pdf
+
+```{r}
+install.packages('fueleconomy')
+```
+
+```{r}
+library(fueleconomy)
+```
+
+```{r}
+data(vehicles)
+```
+
+```{r}
+str(vehicles)
+```
+
+Let's set ourselves the task of comparing the city fuel economy of the midsize class of two car brands: Audi and VW
+
+Our first step is to isolate the relevant data. There are many ways to do this. Here's one:
+
+```{r}
+Audi_Midsize <- vehicles %>%
+    filter(make=="Audi") %>%
+    filter(class=="Midsize Cars")
+```
+
+```{r}
+VW_Midsize <- vehicles %>%
+    filter(make=="Volkswagen") %>%
+    filter(class=="Midsize Cars")
+```
+
+How many cars do we have in each group?
+
+```{r}
+nrow(Audi_Midsize)
+nrow(VW_Midsize)
+```
+
+Let's use t.test to compare performance of the two cars
+
+```{r}
+t.test(Audi_Midsize$cty,VW_Midsize$cty)
+```
+
+```{r}
+# How should we interpret the output?
+```
+
+Let's visualise the data and see if this is the best way to ask our question
+
+```{r}
+Audi_VW <- rbind(Audi_Midsize, VW_Midsize)
+```
+
+```{r}
+# histograms
+ggplot(data = Audi_VW,
+       aes(x = cty, 
+           fill = make)) +
+  geom_histogram(position = 'identity', 
+                 alpha = 0.5,
+                 bins = 20)
+```
+
+```{r}
+# density plots
+ggplot(Audi_VW, aes(x = cty, fill = make)) +
+  geom_density(alpha = 0.5)
+```
+
+We see that a normal distribution is an okay model for our data, but perhaps not the best one. We can see something important happening in the tails suggesting there is important structure we will miss.
+
+Let's investigate that structure
+
+```{r}
+str(Audi_VW)
+```
+
+Let's make a scatterplot
+
+```{r}
+ggplot(data=Audi_VW,
+       aes(x=cyl,
+           y=cty)) +
+  geom_point() +
+  facet_wrap(~make)
+```
+
+```{r}
+# Question: what's wrong with this plot? Hidden data. Over plotting. How can we deal with that.
+# let's add a bit of jitter or noise so we can see all of the data points 
+```
+
+```{r}
+ggplot(data=Audi_VW,
+       aes(x=cyl,
+           y=cty)) +
+  geom_point(position = 'jitter') +
+  facet_wrap(~make)
+```
+
+```{r}
+# Question: what is the likely cause of the difference in fuel efficiency between audi and vw midsize cars?
+# we'll learn how to address this question tomorrow when we discuss linear regression
+```
+
+```{r}
+# You have learned about subsetting to create new data frames from larger data sets
+# You have learned how to explore data to identify possible hidden correlates 
+```
+
+

@@ -1,0 +1,142 @@
+---
+title: An R Markdown document converted from "stats_2_empty_ipynb.ipynb"
+output: html_document
+---
+
+# Exercise 1 - introducing t-test 
+
+You have already learned about the the command line, scripts, and functions. R has one more level of organisation. Packages. Packages are sets of functions. We have already used one of these. Packages can also include data. We are now going to install a package, load it, and use it just for it's data. 
+
+The package level is what makes R so powerful as a an open source language. you can make a package, get it reviewed, and have it stored on CRAN (Comprehensive R Archive Network) where everyone can download it. This means that R is an active environment for the development of statistical methods and theory.
+
+Description of the package here: https://simplystatistics.org/2018/01/22/the-dslabs-package-provides-datasets-for-teaching-data-science/
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+Let's conduct an analysis of the height data - self-reported heights in inches
+```{r}
+
+```
+
+This gives us a data frame.
+```{r}
+
+```
+
+First let's make frequency distributions for the women and men seperately.
+
+You can make some quick and dirty separate plots using a basic function and indexing...
+```{r}
+
+```
+
+... though it would be better if we could see all the data together on the same histogram
+```{r}
+
+```
+
+```{r}
+
+```
+
+Let's look at the summary statistics - you can actually make them in 1 table!
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+Lets try visualising the data in terms of probability distributions
+```{r}
+
+```
+
+Now we are ready to run a hypothesis test. Are men taller than women? What sort of t test should we do?
+```{r}
+
+```
+
+# Exercise 2 - Some more messy real world data
+
+We have been dealing with data that is fairly well organised. Let's look at some data that is slightly more messy
+
+Install and load the fuelconomy package, which has fuel economy data from the EPA: https://cran.r-project.org/web/packages/fueleconomy/fueleconomy.pdf
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+Let's set ourselves the task of comparing the city fuel economy of the midsize class of two car brands: Audi and VW
+
+Our first step is to isolate the relevant data. There are many ways to do this. Here's one:
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+How many cars do we have in each group?
+```{r}
+
+```
+
+Let's use t.test to compare performance of the two cars
+```{r}
+
+```
+
+Let's visualise the data and see if this is the best way to ask our question
+```{r}
+
+```
+
+```{r}
+
+```
+
+```{r}
+
+```
+
+We see that a normal distribution is an okay model for our data, but perhaps not the best one. We can see something important happening in the tails suggesting there is important structure we will miss.
+
+Let's investigate that structure
+```{r}
+
+```
+
+Let's make a scatterplot
+```{r}
+
+```
+
+```{r}
+
+```
+

@@ -1,0 +1,305 @@
+---
+title: An R Markdown document converted from "stats_1_filled.ipynb"
+output: html_document
+---
+
+# Part 1 - The basics
+
+R is just a calculator.
+
+```{r}
+4+3
+```
+
+```{r}
+4-3
+```
+
+There is special syntax for multiplication and division.
+
+```{r}
+4*3
+```
+
+```{r}
+12/4
+```
+
+We can also assign numbers to variables and to operations.
+
+```{r}
+A <- 4
+B <- 3
+A + B
+```
+
+A function is just something with an input and an output.
+
+```{r}
+sum(4, 3)
+```
+
+```{r}
+sqrt(4)
+```
+
+```{r}
+sum(A, B)
+```
+
+# Part 2 - A bit more advanced
+
+The nice thing about R is that unlike on a calculator, you can keep track of your operations. This is important for reproducing your work, and doing more complicated stuff. Let's look at some of this more complicated stuff!
+
+We can assign lists of numbers to variables. This is called an array.
+'c' is just a function. It means 'concatenate'.
+
+```{r}
+A <- c(1, 2, 3, 4, 5)
+B <- c(2, 2, 2, 2, 2)
+```
+
+We can do operations on lists too, the same as for simpler variables.
+We can make a new variable in the process.
+
+```{r}
+C <- A + B
+```
+
+To see the output, you need to call the variable directly.
+
+```{r}
+C
+```
+
+We can use other functions to make lists. We can make sequences...
+
+```{r}
+A <- seq(1, 5, 1)
+A
+```
+
+...or repeat numbers
+
+```{r}
+B <- rep(2, 5)
+B
+```
+
+We can also generate random lists.
+
+```{r}
+weight1 <- runif(30, 60, 120)
+weight2 <- runif(30, 80, 140)
+```
+
+A uniform distribution is a probability distribution in which all outcomes are equally likely, resulting in a constant probability density across a specified interval.
+
+If you are unsure about how a function works, there's a built-in way to get help:
+
+```{r}
+?runif
+```
+
+We don't have to use a uniform distribution. Actually, a normal distribution will be better. Let's do that instead.
+
+```{r}
+weight1 <- rnorm(30, 60, 10)
+weight2 <- rnorm(30, 80, 10)
+```
+
+A normal distribution is a symmetric, bell-shaped probability distribution characterized by its mean and standard deviation, where approximately 68% of the data falls within one standard deviation of the mean.
+
+We can also make lists of words. This can be useful if our variables are categorical. 
+
+```{r}
+species1 <- rep("Deer", 30)
+species2 <- rep("Reindeer", 30)
+```
+
+```{r}
+species1
+```
+
+We can also manipulate arrays. This can be necessary for tidying data, and getting it into the right format. We can for example append one array to another. We just use the c() function for this.
+
+```{r}
+Weight <- c(weight1, weight2)
+Species <- c(species1, species2)
+Weight
+```
+
+This gives us our weights and species as nice tidy data arrays. We can also organise our data into spreadsheets like excel. These are called data frames in R.
+
+```{r}
+DeerStudy <- data.frame(Weight, Species)
+```
+
+You can always take a look at the dataframe by calling it.
+
+```{r}
+DeerStudy
+```
+
+We can look at just the top of this spreadsheet.
+
+```{r}
+head(DeerStudy)
+```
+
+We can also pick out specific variables to do stuff to. We use the '$' for this.
+
+```{r}
+DeerStudy$Species
+```
+
+We can also save our spreadsheet.
+
+```{r}
+save(DeerStudy, file = "DeerStudy.RData")
+```
+
+# Part 3 - Basic plotting
+
+Plotting is very important. It allows you to see relationships between variables. There are different kinds of plots that are useful for different kinds of relationships.
+
+If you want to plot something very quickly, base R (when you don't download any extra packages) has some great options.
+
+To visualize the relationship between two continuous variables, you can use a scatterplot...
+
+```{r}
+plot(A, C)
+```
+
+```{r}
+plot(C~A)
+```
+
+... while boxplots tell you the relationship between categorical and continuous variables.
+
+```{r}
+boxplot(Weight~Species)
+```
+
+The tilde "~" is important in R. It can be read to mean "as a function of", or "distributed as". You will see it again, and you will get used to it. This little syntactic difference is important, because it can allow us to make the same plot using different kinds of data structures. 
+
+These plots are a bit ugly. Even base R can make beautiful plots, you can look at options to fancy plots up using the ?plot command.
+
+A lot of the R community uses a package called ggplot2 to plot. It is very well-documented online and has a lot of options for customization. Packages are like modules in Python. We'll talk a bit more about packages next class. For now, let's just install and load:
+
+```{r}
+install.packages("dplyr")
+install.packages("ggplot2")
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+ggplot(DeerStudy,
+       aes(x = Species,
+           y = Weight)) +
+    geom_boxplot()
+```
+
+ggplot2 is a very modular way of plotting. You give commands in a sequential order, and the output of one command is passed to the command with a '+' operator.
+
+The first block (before the + sign) specifies the data we want to use and how we want to use it. Using + signs, we can add extra options, for example the style of plot. You can really go crazy with the customizations!
+
+```{r}
+ggplot(DeerStudy,
+       aes(x = Species,
+           y = Weight,
+           fill = Species)) +
+    geom_boxplot() +
+    scale_fill_manual(values = c("gold", "darkgreen")) +
+    labs(title = "Deer weight",
+         x = "Species",
+         y = "Weight (kg)") +
+    theme_minimal()
+```
+
+There are several excellent resources for learning about ggplot2. Try to play around with them. For example: https://rstudio.github.io/cheatsheets/html/data-visualization.html
+
+You have encountered some basic plotting functions in R. You have learned the tilde operator. You have learned how to search the help documentation.
+
+# Part 4 - Indexing and basic statistics
+
+R is a statistical language, and so it has functions for running statistical operations and models.
+
+We can calculate the average a of variable:
+
+```{r}
+mean(Weight)
+```
+
+Sometimes we are interested in sorting or carving our data up, and doing stats on a part of it. We can use indexing for this. For example, we might just want the average of each species in our study
+
+Let's look at how to extract weights for either just the Deers or the Reindeers in our study
+
+```{r}
+Weight[Species=="Deer"]
+```
+
+```{r}
+Weight[Species=="Reindeer"]
+```
+
+...so that we can compare the average weight
+
+```{r}
+mean(Weight[Species=="Deer"])
+```
+
+```{r}
+mean(Weight[Species=="Reindeer"])
+```
+
+Indexing is incredibly useful. You need to know it. But it is awkward for data frames. We can make a table instead using some basic data manipulation functions. This new table is a new data frame
+
+```{r}
+meanTable <- DeerStudy %>%
+    group_by(Species) %>%
+    summarize(MeanWeight = mean(Weight))
+```
+
+```{r}
+meanTable
+```
+
+This is the exact same logic as with the plotting. First you define the data you are working on, then you sequentially operate on it. This is called "piping".
+
+The mean is only one statistic. We can also look at other statistics. How about the median?
+
+```{r}
+medianTable <- DeerStudy %>%
+    group_by(Species) %>%
+    summarize(MedianWeight = median(Weight))
+```
+
+```{r}
+medianTable
+```
+
+We can also look at the standard deviation.
+
+```{r}
+sdTable <- DeerStudy %>%
+    group_by(Species) %>%
+    summarize(SdWeight = sd(Weight))
+```
+
+```{r}
+sdTable
+```
+
+Now we are almost ready to do some statistics. We will cover statistical concepts in the next lecture. BUt as a teaser, let's look at a quick comparison, and see if these means are really different.
+
+```{r}
+t.test(weight1, weight2)
+```
+
+You have learned about indexing. You have learned about basic statistical functions. You have learned how to generate summary tables. You have run your first statistical simulation, and your first hypothesis test.
+
